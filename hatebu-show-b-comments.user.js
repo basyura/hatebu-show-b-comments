@@ -17,7 +17,9 @@ const CONTENTS_HEIGHT_RATE   = 0.6;
 const CONTENTS_SCROLL_HEIGHT = 40;
        
     w.addEventListener('keypress', function(e) {
-        if (String.fromCharCode(e.charCode) != TORIGGER_KEY) {
+        var key = String.fromCharCode(e.charCode)
+        if (key != TORIGGER_KEY && key != REMOVE_KEY) {
+          removeComment();
           return;
         }
         if(isExistComment()) {
@@ -26,18 +28,18 @@ const CONTENTS_SCROLL_HEIGHT = 40;
             if(contents.scrollHeight <= contents.scrollTop + getContentsHeight()) {
                 removeComment();
             }
-            contents.scrollTop += CONTENTS_SCROLL_HEIGHT;
+            if (key == TORIGGER_KEY) {
+              contents.scrollTop += CONTENTS_SCROLL_HEIGHT;
+            }
+            else {
+              contents.scrollTop -= CONTENTS_SCROLL_HEIGHT;
+            }
         }
         else {
             appendComment().innerHTML = createComment({"title":"loading ...","count":-1,"bookmarks":[]});
             showComments(w.Hatena.Bookmark.Navigator.instance.getCurrentElement().childNodes[3].href);
         }
     },true);
-    w.addEventListener('keypress', function(e) {
-        if (String.fromCharCode(e.charCode) == REMOVE_KEY) {
-          removeComment();
-        }
-    });
 // private methods
 function showComments(link) {
     var opt = {
