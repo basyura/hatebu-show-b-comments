@@ -37,15 +37,15 @@ const CONTENTS_SCROLL_HEIGHT = 40;
         }
         if(isExistComment()) {
            var comment  = appendComment();
-           var contents = getSingleNodeValue(comment , ".//div[@id='" + ID_CONTENTS + "']");
-            if(contents.scrollHeight <= contents.scrollTop + getContentsHeight()) {
+           var contents = $(comment).find(ID_CONTENTS);
+           if(contents.get(0).scrollHeight <= contents.scrollTop() + getContentsHeight()) {
                 removeComment();
             }
             if (key == TORIGGER_KEY) {
-              contents.scrollTop += CONTENTS_SCROLL_HEIGHT;
+              contents.scrollTop(contents.scrollTop() + CONTENTS_SCROLL_HEIGHT);
             }
             else {
-              contents.scrollTop -= CONTENTS_SCROLL_HEIGHT;
+              contents.scrollTop(contents.scrollTop() - CONTENTS_SCROLL_HEIGHT);
             }
         }
         else {
@@ -115,7 +115,7 @@ function createComment(bm) {
         buf.push("</span>");
     }
     buf.push("</div>");
-    buf.push("<div id='" + ID_CONTENTS + "' style='");
+    buf.push("<div id='hatena_bookmark_comment' style='");
     buf.push("height:" + getContentsHeight() + "px;");
     buf.push("overflow-y:auto;");
     buf.push("background-color:#f0f0f0;");
