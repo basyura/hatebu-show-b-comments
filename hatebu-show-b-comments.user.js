@@ -2,16 +2,29 @@
 // @name           hatebu-show-b-comments
 // @namespace      hatebu@basyura.org
 // @description    show hatebu comments
+// @resource       jquery    http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js 
 // @include        http://b.hatena.ne.jp/basyura/
 // ==/UserScript==
 
 (function (w) {
+
+(function() { 
+  var head   = document.getElementsByTagName('head')[0]; 
+  var script = document.createElement('script');
+  script.type = 'text/javascript'; 
+  var jQuery   = GM_getResourceText('jquery');
+  //var jQueryUI = GM_getResourceText('jqueryui'); 
+  //script.innerHTML = jQuery + jQueryUI;
+  script.innerHTML = jQuery;
+  head.appendChild(script); 
+  $ = w.$; 
+})();
    
 const JSON_API_URL = "http://b.hatena.ne.jp/entry/json/";
 const TORIGGER_KEY = "m";
 const REMOVE_KEY   = "M";
-const ID_COMMENT   = "hatena_bookmark_comment";
-const ID_CONTENTS  = "hatena_bookmark_comment";
+const ID_COMMENT   = "#hatena_bookmark_comment";
+const ID_CONTENTS  = "#hatena_bookmark_comment";
 const CONTENTS_WIDTH_RATE    = 0.8;
 const CONTENTS_HEIGHT_RATE   = 0.6;
 const CONTENTS_SCROLL_HEIGHT = 40;
@@ -20,7 +33,7 @@ const CONTENTS_SCROLL_HEIGHT = 40;
         var key = String.fromCharCode(e.charCode)
         if (key != TORIGGER_KEY && key != REMOVE_KEY) {
           removeComment();
-          return;
+          return true;
         }
         if(isExistComment()) {
            var comment  = appendComment();
@@ -39,6 +52,7 @@ const CONTENTS_SCROLL_HEIGHT = 40;
             appendComment().innerHTML = createComment({"title":"loading ...","count":-1,"bookmarks":[]});
             showComments(w.Hatena.Bookmark.Navigator.instance.getCurrentElement().childNodes[3].href);
         }
+        return true;
     },true);
 // private methods
 function showComments(link) {
@@ -59,20 +73,29 @@ function showComments(link) {
     window.setTimeout(GM_xmlhttpRequest, 0, opt);
 }
 function removeComment() {
-    var comment = document.getElementById(ID_COMMENT);
-    if(comment != null) {
-        document.body.removeChild(comment);
-    }
+  $(ID_COMMENT).remove();
 }
 function isExistComment() {
-    var comment = document.getElementById(ID_COMMENT);
-    return comment != null;
+  return $(ID_COMMENT).size() != 0
 }
 function appendComment() {
-    var comment = document.getElementById(ID_COMMENT);
+  /* TODO : use jQuery
+    var comment = $(ID_COMMENT);
+    if(comment.size() == 0) {
+        comment = $("<div/>");
+        comment.attr("id"     , ID_COMMENT)
+               .attr("align"  , "center");
+               .css("position", "absolute")
+               .css("width"   , "100%")
+               .css("top"     , $(document.documentElement).scrollTop() + 50 + "px;")
+        $(body).appendChild(comment);
+    }
+    return comment;
+   */
+    var comment = document.getElementById("hatena_bookmark_comment");
     if(comment == null) {
         comment = document.createElement("div");
-        comment.setAttribute("id"    , ID_COMMENT);
+        comment.setAttribute("id"    , "hatena_bookmark_comment");
         comment.setAttribute("style" , "position:absolute;width:100%;top:" + (document.documentElement.scrollTop + 50 ) + "px;");
         comment.setAttribute("align" , "center");
         document.body.appendChild(comment);
