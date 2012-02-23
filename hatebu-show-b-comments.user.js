@@ -90,39 +90,55 @@ function appendComment() {
         $(document.body).append(comment);
     }
     return comment;
-    /*
-    var comment = document.getElementById("hatena_bookmark_comment");
-    if(comment == null) {
-        comment = document.createElement("div");
-        comment.setAttribute("id"    , "hatena_bookmark_comment");
-        comment.setAttribute("style" , "position:absolute;width:100%;top:" + (document.documentElement.scrollTop + 50 ) + "px;");
-        comment.setAttribute("align" , "center");
-        document.body.appendChild(comment);
-    }
-    return comment;
-    */
 }
 function createComment(bm) {
+    
+    var container = $('<div/>')
+      .css('width'           , getContentsWidth() + 'px')
+      .css('border'          , '1px solid #2C6EBD')
+      .css('border-radius'   , '5px 5px 5px 5px')
+      .css('padding'         , '2px')
+      .css('background-color', '#2C6EBD');
+
+    //----- title
+
+    var title = $('<div/>')
+      .css('color'  , '#ffffff')
+      .css('padding', '5px')
+      .attr('align' , 'left')
+      .html('&nbsp;' + bm.title + '&nbsp;&nbsp;')
+      .appendTo(container);
+
+    if (bm.count > 0) {
+      title.append($('<span/>')
+        .css('background-color', '#FFCCCC')
+        .css('color'           , '#FF0000')
+        .css('font-size'       , '10pt')
+        .css('padding'         , '2px')
+        .css('border-radius'   , '5px 5px 5px 5px')
+        .html(bm.count + ' users'));
+    }
+
+    //----- comments
+
+    var comment_outer = $('<div/>')
+      .attr('id'             , 'hatena_bookmark_comment')
+      .attr('align'          , 'center')
+      .css('height'          , getContentsHeight() + 'px')
+      .css('overflow-y'      , 'auto')
+      .css('background-color', '#f0f0f0')
+      .css('border'          , '3px solid #2C6EBD')
+      .css('font-size'       , '10pt')
+      .appendTo(container);
+
+    var comment = $('<div/>')
+      .attr('align' , 'left')
+      .css('width'  , '95%')
+      .css('padding', '3px')
+      .appendTo(comment_outer);
+
     var bookmarks = bm.bookmarks.reverse();
     var buf = [];
-    buf.push("<div style='width:" + getContentsWidth() + "px;border:1px solid #2C6EBD;border-radius:5px 5px 5px 5px;padding:2px;background-color:#2C6EBD;'>");
-    buf.push("<div style='color:#ffffff;padding:5px;' align='left'>");
-    buf.push("&nbsp;" + bm.title);
-    buf.push("&nbsp;&nbsp;");
-    if(bm.count > 0) {
-      buf.push("<span style='background-color:#FFCCCC;color:#FF0000;font-size:10pt;padding:2px;border-radius:5px 5px 5px 5px;'>");
-        buf.push(bm.count + " users");
-        buf.push("</span>");
-    }
-    buf.push("</div>");
-    buf.push("<div id='hatena_bookmark_comment' style='");
-    buf.push("height:" + getContentsHeight() + "px;");
-    buf.push("overflow-y:auto;");
-    buf.push("background-color:#f0f0f0;");
-    buf.push("border:3px solid #2C6EBD;");
-    buf.push("font-size:10pt;");
-    buf.push("' align='center'>");
-    buf.push("<div style='width:95%;padding:3px;' align='left'>");
     for(var i = 0 ; i < bookmarks.length ; i++) {
         var b = bookmarks[i];
         if(b.comment == "") {
@@ -134,10 +150,9 @@ function createComment(bm) {
         buf.push("&nbsp;" + b.comment + "&nbsp;" + b.timestamp);
         buf.push("<hr style='color:#c9f6ff;'>");
     }
-    buf.push("</div>");
-    buf.push("</div>");
-    buf.push("</div>");
-    return buf.join("");
+    comment.html(buf.join(""));
+
+    return container;
 }
 function getSingleNodeValue(base , reg) {
     return document.evaluate(
