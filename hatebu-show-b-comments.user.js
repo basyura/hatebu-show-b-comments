@@ -23,8 +23,8 @@
 const JSON_API_URL = "http://b.hatena.ne.jp/entry/json/";
 const TORIGGER_KEY = "m";
 const REMOVE_KEY   = "M";
-const ID_COMMENT   = "#hatena_bookmark_comment";
-const ID_CONTENTS  = "#hatena_bookmark_comment";
+const ID_COMMENT   = "hatena_bookmark_comment";
+const ID_CONTENTS  = "hatena_bookmark_comment";
 const CONTENTS_WIDTH_RATE    = 0.8;
 const CONTENTS_HEIGHT_RATE   = 0.6;
 const CONTENTS_SCROLL_HEIGHT = 40;
@@ -37,7 +37,7 @@ const CONTENTS_SCROLL_HEIGHT = 40;
         }
         if(isExistComment()) {
            var comment  = appendComment();
-           var contents = $(comment).find(ID_CONTENTS);
+           var contents = comment.find('#' + ID_CONTENTS);
            if(contents.get(0).scrollHeight <= contents.scrollTop() + getContentsHeight()) {
                 removeComment();
             }
@@ -49,7 +49,7 @@ const CONTENTS_SCROLL_HEIGHT = 40;
             }
         }
         else {
-            appendComment().innerHTML = createComment({"title":"loading ...","count":-1,"bookmarks":[]});
+            appendComment().html(createComment({"title":"loading ...","count":-1,"bookmarks":[]}));
             showComments(w.Hatena.Bookmark.Navigator.instance.getCurrentElement().childNodes[3].href);
         }
         return true;
@@ -65,7 +65,7 @@ function showComments(link) {
             }
             var text = "(" + res.responseText +")";
             var bm = text == "(null)" ? {"title":"no comment" , "count":-1,"bookmarks":[]} : eval(text);
-            appendComment().innerHTML = createComment(bm);
+            appendComment().html(createComment(bm));
         },
         onerror: function(res){
         },
@@ -73,25 +73,24 @@ function showComments(link) {
     window.setTimeout(GM_xmlhttpRequest, 0, opt);
 }
 function removeComment() {
-  $(ID_COMMENT).remove();
+  $('#' + ID_COMMENT).remove();
 }
 function isExistComment() {
-  return $(ID_COMMENT).size() != 0
+  return $('#' + ID_COMMENT).size() != 0
 }
 function appendComment() {
-  /* TODO : use jQuery
-    var comment = $(ID_COMMENT);
+    var comment = $('#' + ID_COMMENT);
     if(comment.size() == 0) {
         comment = $("<div/>");
         comment.attr("id"     , ID_COMMENT)
-               .attr("align"  , "center");
+               .attr("align"  , "center")
                .css("position", "absolute")
                .css("width"   , "100%")
-               .css("top"     , $(document.documentElement).scrollTop() + 50 + "px;")
-        $(body).appendChild(comment);
+               .css("top"     , ($(document.documentElement).scrollTop() + w.innerHeight / 8) + "px");
+        $(document.body).append(comment);
     }
     return comment;
-   */
+    /*
     var comment = document.getElementById("hatena_bookmark_comment");
     if(comment == null) {
         comment = document.createElement("div");
@@ -101,6 +100,7 @@ function appendComment() {
         document.body.appendChild(comment);
     }
     return comment;
+    */
 }
 function createComment(bm) {
     var bookmarks = bm.bookmarks.reverse();
