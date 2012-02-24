@@ -54,6 +54,7 @@ w.addEventListener('keypress', function(e) {
         contents.scrollTop(sc_top);
         return;
     }
+    // no comment area
     // check url
     var current = w.Hatena.Bookmark.Navigator.instance.getCurrentElement();
     if (current === undefined) {
@@ -61,7 +62,6 @@ w.addEventListener('keypress', function(e) {
     }
     // hatebu url
     var url = current.childNodes[3].href;
-    // no comment area
     getComment().html(createCommentBody({"title":"loading ...","count":-1,"bookmarks":[]}));
     (function (link) {
         var opt = {
