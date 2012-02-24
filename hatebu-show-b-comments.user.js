@@ -105,6 +105,7 @@ function getComment() {
           .attr("align"  , "center")
           .css("position", "absolute")
           .css("width"   , "100%")
+          .css('z-index' , 999999)
           .css("top"     , ($(document.documentElement).scrollTop() + w.innerHeight / 8) + "px")
           .appendTo($(document.body));
     }
