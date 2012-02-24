@@ -3,7 +3,7 @@
 // @namespace      hatebu@basyura.org
 // @description    show hatebu comments
 // @resource       jquery    http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js 
-// @include        http://b.hatena.ne.jp/basyura/
+// @include        http://b.hatena.ne.jp/*
 // ==/UserScript==
 
 (function (w) {
