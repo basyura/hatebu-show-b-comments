@@ -44,10 +44,9 @@ w.addEventListener('keypress', function(e) {
       removeComment();
       return true;
     }
-    // exist comment
+    // exist comment area
     if(isExistComment()) {
-       var comment  = getComment();
-       var contents = comment.find('#' + ID_COMMENT);
+       var contents = getComment().find('#' + ID_COMMENT);
        if(contents.get(0).scrollHeight <= contents.scrollTop() + getContentsHeight()) {
             removeComment();
         }
@@ -55,7 +54,14 @@ w.addEventListener('keypress', function(e) {
         contents.scrollTop(sc_top);
         return;
     }
-    // no comment
+    // check url
+    var current = w.Hatena.Bookmark.Navigator.instance.getCurrentElement();
+    if (current === undefined) {
+      return;
+    }
+    // hatebu url
+    var url = current.childNodes[3].href;
+    // no comment area
     getComment().html(createCommentBody({"title":"loading ...","count":-1,"bookmarks":[]}));
     (function (link) {
         var opt = {
@@ -73,7 +79,7 @@ w.addEventListener('keypress', function(e) {
           },
         }
         w.setTimeout(GM_xmlhttpRequest, 10, opt);
-      })(w.Hatena.Bookmark.Navigator.instance.getCurrentElement().childNodes[3].href);
+      })(url);
 }, true);
 // private methods
 /*
